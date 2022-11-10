@@ -55,6 +55,13 @@ function game() {
     console.log(playRound(playerSelection, computerSelection));
     console.log(playerScore, computerScore);
   }
+  //Report winner or loser after 5 round base on scores.
+  if (playerScore > computerScore) {
+    alert("Congratulation! You won!");
+  } else if (playerScore < computerScore) {
+    alert("The Computer Won. Try again!");
+  } else {
+    alert("It was a tie!");
+  }
 }
-gam;
-e();
+game();
