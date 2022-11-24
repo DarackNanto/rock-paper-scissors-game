@@ -1,4 +1,4 @@
-//Function generates random computer choice between Rock, paper and scissor
+//Function generates random computer choice between Rock, paper and scissors
 function getComputerChoice() {
   const choices = ["Rock", "Paper", "Scissors"];
   let i = Math.floor(Math.random() * 3);
@@ -6,7 +6,8 @@ function getComputerChoice() {
   return choice;
 }
 
-//Function compares player vs computer input. Then return string result.
+//Function compares player vs computer input, compares value case sensitive. Then return string result.
+//Increment winner score by 1. Loser current score remain the same.
 let playerScore = 0;
 let computerScore = 0;
 function playRound(playerSelection, computerSelection) {
@@ -35,33 +36,48 @@ function playRound(playerSelection, computerSelection) {
   }
 }
 
-function playerChoice() {
-  //Prompt to get player input choice
-  const playerInputChoice = prompt("Enter Rock, Paper or Scissors", "rock");
-  //Makes player input case insensitive. Capitalize first letter and lowercase remaining letters
-  const choice =
-    playerInputChoice[0].toUpperCase() +
-    playerInputChoice.slice(1).toLowerCase();
-  return choice;
-}
+//Event listener retrieve player choice base on button clicked or choice
+// we use the .forEach method to iterate through each button
+// we attach an event listener to each button, and trigger a playRound func
+const buttons = document.querySelectorAll("button");
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    //Call  func getComputerChoice and assign choice to ComputerSelection variable
+    let computerSelection = getComputerChoice();
+    //Player selection is assigned choice user clicked
+    let playerSelection = button.id;
 
-//Plays 5 rounds of stop
-function game() {
-  for (let i = 0; i < 5; i++) {
-    //Assign random player choice to playerSelection variable
-    const playerSelection = playerChoice();
-    //Assign random computer choice to ComputerSelection variable
-    const computerSelection = getComputerChoice();
-    console.log(playRound(playerSelection, computerSelection));
-    console.log(playerScore, computerScore);
-  }
-  //Report winner or loser after 5 round base on scores.
-  if (playerScore > computerScore) {
-    alert("Congratulation! You won!");
-  } else if (playerScore < computerScore) {
-    alert("The Computer Won. Try again!");
-  } else {
-    alert("It was a tie!");
-  }
-}
-game();
+    //Empty final result DOM
+    const final = document.querySelector("#final-score");
+    final.textContent = "";
+
+    //Adding HTML content to the DOM. Winner or loose statement base on player selection per round
+    const result = document.querySelector("#result");
+    const player = document.querySelector("#player");
+    const computer = document.querySelector("#computer");
+
+    //Call playRound func and assign plyer and computer choice and return result
+    result.textContent = playRound(playerSelection, computerSelection);
+    //Update score per round
+    player.textContent = playerScore;
+    computer.textContent = computerScore;
+
+    //Empty player selection after each round.
+    playerSelection = "";
+    computerSelection = "";
+
+    //Plays until a player score reaches 5 points total, and print the overall winner through DOM.
+    //Reset score to 0
+    if (computerScore == 5 || playerScore == 5) {
+      if (playerScore > computerScore) {
+        computerScore = 0;
+        playerScore = 0;
+        final.textContent = "Congratulation! You won!";
+      } else if (playerScore < computerScore) {
+        computerScore = 0;
+        playerScore = 0;
+        final.textContent = "The Computer Won. Try again!";
+      }
+    }
+  });
+});
